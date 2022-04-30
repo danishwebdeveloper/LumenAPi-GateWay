@@ -40,21 +40,24 @@ class AuthorController extends Controller
      */
     public function store(Request $request)
     {
-
+        return $this->successResponse($this->authorService->createAuthor($request->all()), Response::HTTP_CREATED);
     }
 
     public function show($authorId)
     {
+        return $this->successResponse($this->authorService->obtainAuthor($authorId));
 
     }
 
     public function update(Request $request, $authorId)
     {
+        return $this->successResponse($this->authorService->editAuthor($request->all(), $authorId));
 
     }
 
     public function destroy($authorId)
     {
+        return $this->successResponse($this->authorService->deleteAuthor($authorId));
 
     }
 }
