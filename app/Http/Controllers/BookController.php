@@ -2,31 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Book;
-use App\Services\AuthorService;
-use App\Services\BookService;
+use App\Book;
 use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
+use App\Services\BookService;
 use Illuminate\Http\Response;
+use App\Services\AuthorService;
 
 class BookController extends Controller
 {
-
     use ApiResponser;
 
     /**
-     * The service to consume the Books microservice
-     *
+     * The service to consume the books microservice
      * @var BookService
      */
-
     public $bookService;
+
     /**
-     * The service to consume the author microservice
-     *
+     * The service to consume the authors microservice
      * @var AuthorService
      */
-
     public $authorService;
 
     /**
@@ -36,46 +32,54 @@ class BookController extends Controller
      */
     public function __construct(BookService $bookService, AuthorService $authorService)
     {
-        return $this->bookService = $bookService;
+        $this->bookService = $bookService;
+        $this->authorService = $authorService;
     }
 
     /**
-     * Display All books
-     * @return Illuminate\Http\Response;
+     * Return the list of books
+     * @return Illuminate\Http\Response
      */
-
     public function index()
     {
         return $this->successResponse($this->bookService->obtainBooks());
     }
 
     /**
-     * Store an Book
-     * @param Request $request
-     * @return use Illuminate\Http\Response;
+     * Create one new book
+     * @return Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        // While Creating post, valid_id should be enter
         $this->authorService->obtainAuthor($request->author_id);
-        return $this->successResponse($this->bookService->createBook($request->all()), Response::HTTP_CREATED);
+
+        return $this->successResponse($this->bookService->createBook($request->all(), Response::HTTP_CREATED));
     }
 
-    public function show($BookId)
+    /**
+     * Obtains and show one book
+     * @return Illuminate\Http\Response
+     */
+    public function show($book)
     {
-        return $this->successResponse($this->bookService->obtainBook($BookId));
-
+        return $this->successResponse($this->bookService->obtainBook($book));
     }
 
-    public function update(Request $request, $BookId)
+    /**
+     * Update an existing book
+     * @return Illuminate\Http\Response
+     */
+    public function update(Request $request, $book)
     {
-        return $this->successResponse($this->bookService->editBook($request->all(), $BookId));
-
+        return $this->successResponse($this->bookService->editBook($request->all(), $book));
     }
 
-    public function destroy($BookId)
+    /**
+     * Remove an existing book
+     * @return Illuminate\Http\Response
+     */
+    public function destroy($book)
     {
-        return $this->successResponse($this->bookService->deleteBook($BookId));
-
+        return $this->successResponse($this->bookService->deleteBook($book));
     }
 }

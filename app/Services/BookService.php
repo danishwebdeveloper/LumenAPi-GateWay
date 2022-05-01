@@ -9,16 +9,13 @@ class BookService
     use ConsumesExternalServices;
 
     /**
-     * The base uri to consume the authors service
-     *
+     * The base uri to consume the books service
      * @var string
      */
-
     public $baseUri;
 
     /**
      * The secret to consume the authors service
-     *
      * @var string
      */
     public $secret;
@@ -26,52 +23,51 @@ class BookService
     public function __construct()
     {
         $this->baseUri = config('services.books.base_uri');
-        $this->secret = config('services.authors.secret');
-
-    }
-
-    public function obtainBooks()
-    {
-        return $this->PerformRequest('GET', '/books');
+        $this->secret = config('services.books.secret');
     }
 
     /**
-     * createBook for the book service
-     *
+     * Obtain the full list of book from the book service
+     * @return string
+     */
+    public function obtainBooks()
+    {
+        return $this->performRequest('GET', '/books');
+    }
+
+    /**
+     * Create one book using the book service
      * @return string
      */
     public function createBook($data)
     {
-        return $this->performRequest("POST", "/books", $data);
+        return $this->performRequest('POST', '/books', $data);
     }
 
     /**
-     * showBook for the Book service
-     *
+     * Obtain one single book from the book service
      * @return string
      */
-    public function obtainBook($bookId)
+    public function obtainBook($book)
     {
-        return $this->performRequest("GET", "/books/{$bookId}");
+        return $this->performRequest('GET', "/books/{$book}");
     }
 
     /**
-     * editBook for the Book service
-     *
+     * Update an instance of book using the book service
      * @return string
      */
-    public function editBook($data, $bookId)
+    public function editBook($data, $book)
     {
-        return $this->performRequest("PUT", "/books/{$bookId}", $data);
+        return $this->performRequest('PUT', "/books/{$book}", $data);
     }
 
     /**
-     * deleteBook for the Book service
-     *
+     * Remove a single book using the book service
      * @return string
      */
-    public function deleteBook($bookId)
+    public function deleteBook($book)
     {
-        return $this->performRequest("DELETE", "/books/{$bookId}");
+        return $this->performRequest('DELETE', "/books/{$book}");
     }
 }

@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Traits\ApiResponser;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-
     use ApiResponser;
+
     /**
      * Create a new controller instance.
      *
@@ -23,91 +23,90 @@ class UserController extends Controller
     }
 
     /**
-     * Display All books
-     * @return Illuminate\Http\Response;
+     * Return the list of users
+     * @return Illuminate\Http\Response
      */
-
     public function index()
     {
         $users = User::all();
+
         return $this->validResponse($users);
     }
 
     /**
-     * Store an Book
-     * @param Request $request
-     * @return use Illuminate\Http\Response;
+     * Create one new user
+     * @return Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $rules = [
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6|confirmed',
+            'password' => 'required|min:8|confirmed',
         ];
 
         $this->validate($request, $rules);
 
-        // Password Should Be encrypted, So
         $fields = $request->all();
         $fields['password'] = Hash::make($request->password);
+
         $user = User::create($fields);
-        $user->save();
 
         return $this->validResponse($user, Response::HTTP_CREATED);
     }
 
     /**
-     * Show a
-     * @param Request $request
-     * @return use Illuminate\Http\Response;
+     * Obtains and show one user
+     * @return Illuminate\Http\Response
      */
-
-    public function show($userId)
+    public function show($user)
     {
-        $user = User::findOrFail($userId);
+        $user = User::findOrFail($user);
+
         return $this->validResponse($user);
     }
 
     /**
-     * Update a
-     * @param Request $request
-     * @return use Illuminate\Http\Response;
+     * Update an existing user
+     * @return Illuminate\Http\Response
      */
-    public function update(Request $request, $userId)
+    public function update(Request $request, $user)
     {
         $rules = [
-            'name' => 'alpha|max:255',
-            'email' => 'email|unique:users,email' . $userId,
-            'password' => 'min:6|confirmed',
+            'name' => 'max:255',
+            'email' => 'email|unique:users,email,' . $user,
+            'password' => 'min:8|confirmed',
         ];
 
         $this->validate($request, $rules);
-        $user = User::findOrFail($userId);
+
+        $user = User::findOrFail($user);
+
         $user->fill($request->all());
 
-        // If user try to update his password
         if ($request->has('password')) {
             $user->password = Hash::make($request->password);
         }
 
         if ($user->isClean()) {
-            return $this->errorResponse("Update At least single field", Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->errorResponse('At least one value must change', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        $user->update();
+
+        $user->save();
+
         return $this->validResponse($user);
     }
 
     /**
-     * Remove an Book
-     * @return use Illuminate\Http\Response;
+     * Remove an existing user
+     * @return Illuminate\Http\Response
      */
-
-    public function destroy($userId)
+    public function destroy($user)
     {
+        $user = User::findOrFail($user);
 
-        $user = User::findOrFail($userId);
         $user->delete();
+
         return $this->validResponse($user);
     }
 }

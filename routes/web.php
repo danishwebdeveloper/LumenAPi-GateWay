@@ -1,7 +1,5 @@
 <?php
 
-/** @var \Laravel\Lumen\Routing\Router $router */
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -13,41 +11,34 @@
 |
  */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
-
 $router->group(['middleware' => 'client.credentials'], function () use ($router) {
-/**
- * Author Routes
- */
+    /**
+     * Routes for authors
+     */
     $router->get('/authors', 'AuthorController@index');
     $router->post('/authors', 'AuthorController@store');
-    $router->get('/authors/{authorId}', 'AuthorController@show');
-    $router->put('/authors/{authorId}', 'AuthorController@update');
-    $router->patch('/authors/{authorId}', 'AuthorController@update');
-    $router->delete('/authors/{authorId}', 'AuthorController@destroy');
-
-/**
- * Books Routes
- */
-
-    $router->get('/books', 'BookController@index');
-    $router->post('/books', 'BookController@store');
-    $router->get('/books/{bookId}', 'BookController@show');
-    $router->put('/books/{bookId}', 'BookController@update');
-    $router->patch('/books/{bookId}', 'BookController@update');
-    $router->delete('/books/{bookId}', 'BookController@destroy');
+    $router->get('/authors/{author}', 'AuthorController@show');
+    $router->put('/authors/{author}', 'AuthorController@update');
+    $router->patch('/authors/{author}', 'AuthorController@update');
+    $router->delete('/authors/{author}', 'AuthorController@destroy');
 
     /**
-     * User Routes
+     * Routes for books
      */
+    $router->get('/books', 'BookController@index');
+    $router->post('/books', 'BookController@store');
+    $router->get('/books/{book}', 'BookController@show');
+    $router->put('/books/{book}', 'BookController@update');
+    $router->patch('/books/{book}', 'BookController@update');
+    $router->delete('/books/{book}', 'BookController@destroy');
 
+    /**
+     * Routes for users
+     */
     $router->get('/users', 'UserController@index');
     $router->post('/users', 'UserController@store');
-    $router->get('/users/{userId}', 'UserController@show');
-    $router->put('/users/{userId}', 'UserController@update');
-    $router->patch('/users/{userId}', 'UserController@update');
-    $router->delete('/users/{userId}', 'UserController@destroy');
-
+    $router->get('/users/{user}', 'UserController@show');
+    $router->put('/users/{user}', 'UserController@update');
+    $router->patch('/users/{user}', 'UserController@update');
+    $router->delete('/users/{user}', 'UserController@destroy');
 });

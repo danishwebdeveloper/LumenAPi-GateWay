@@ -25,7 +25,7 @@ class AuthorController extends Controller
      */
     public function __construct(AuthorService $authorService)
     {
-        return $this->authorService = $authorService;
+        $this->authorService = $authorService;
     }
 
     public function index()
@@ -43,21 +43,21 @@ class AuthorController extends Controller
         return $this->successResponse($this->authorService->createAuthor($request->all()), Response::HTTP_CREATED);
     }
 
-    public function show($authorId)
+    public function show($author)
     {
-        return $this->successResponse($this->authorService->obtainAuthor($authorId));
+        return $this->successResponse($this->authorService->obtainAuthor($author));
 
     }
 
-    public function update(Request $request, $authorId)
+    public function update(Request $request, $author)
     {
-        return $this->successResponse($this->authorService->editAuthor($request->all(), $authorId));
+        return $this->successResponse($this->authorService->editAuthor($request->all(), $author));
 
     }
 
-    public function destroy($authorId)
+    public function destroy($author)
     {
-        return $this->successResponse($this->authorService->deleteAuthor($authorId));
+        return $this->successResponse($this->authorService->deleteAuthor($author));
 
     }
 }
