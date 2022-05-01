@@ -13,7 +13,14 @@ trait ConsumesExternalServices
     {
         $client = new \GuzzleHttp\Client(['base_uri' => $this->baseUri]);
 
-        $response = $client->request($method, $requestUrl, ['form_params' => $formParams, 'headers' => $headers]);
+        // For external services request Authorization
+        if (isset($this->secret)) {
+            $headers['Authorization'] = $this->secret;
+        }
+
+        $response = $client->request($method, $requestUrl,
+        ['form_params' => $formParams, 'headers' => $headers]);
+
         return $response->getBody()->getContents();
     }
 }
