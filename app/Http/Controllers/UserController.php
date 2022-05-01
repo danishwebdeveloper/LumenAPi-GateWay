@@ -103,9 +103,10 @@ class UserController extends Controller
      * @return use Illuminate\Http\Response;
      */
 
-    public function destroy($Id)
+    public function destroy($userId)
     {
-        $user = User::findOrFail($Id);
+
+        $user = User::findOrFail($userId);
         $user->delete();
         return $this->validResponse($user);
     }
